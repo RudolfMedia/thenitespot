@@ -43,3 +43,4 @@ end
 #App server
 gem 'puma'
 
+gem 'devise'
