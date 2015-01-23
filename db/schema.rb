@@ -11,10 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150122235212) do
+ActiveRecord::Schema.define(version: 20150123015129) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "neighborhoods", force: :cascade do |t|
+    t.string   "label"
+    t.string   "name"
+    t.string   "state"
+    t.float    "longitude"
+    t.float    "latitude"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "neighborhoods", ["latitude", "longitude"], name: "index_neighborhoods_on_latitude_and_longitude", using: :btree
 
   create_table "profiles", force: :cascade do |t|
     t.integer  "user_id"
