@@ -46,3 +46,5 @@ gem 'puma'
 gem 'devise'
 #Pretty Urls
 gem 'friendly_id'
+#Geocoding
+gem 'geocoder'

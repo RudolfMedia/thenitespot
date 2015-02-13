@@ -4,16 +4,16 @@ class Spot < ActiveRecord::Base
 
   belongs_to :neighborhood
 
-
-  PRICE_RANGES = { '$'    => 'low pricing', '$$'   => 'moderate pricing', '$$$'  => 'high pricing', '$$$$' => 'fine dining' }
+  PRICE_RANGES 	  = { '$' => 'low pricing', '$$' => 'moderate pricing', '$$$' => 'high pricing', '$$$$' => 'fine dining' }
   PAYMENT_OPTIONS = ['cash', 'visa', 'mastercard', 'amex', 'discover']
-  # geocoded_by :address 
-  # before_validation :gecode, if: ->(s){ s.address.present? && s.address_changed? }
+  
+  geocoded_by :address 
+  before_validation :geocode, if: ->(s){ s.address.present? && s.address_changed? }
 
-  validates_presence_of :name, :street, :city, :state, :zip
+  validates_presence_of :name, :street, :city, :state #, :zip  needed?
   validates :name, length: { in: (3..30) }, exclusion: { in: %w( eat drink attend ) }
   validate :eat_drink_or_attend?
-  #validates_numericality_of :longitude, :latitude, message: 'Unable to locate given address' 
+  validates_numericality_of :longitude, :latitude, message: 'Unable to locate given address' 
   #validate :neighborhood_exists?, unless: ->(s){ s.neighborhood_id.blank? }
   validate :valid_payment_options?, unless: ->(s){ s.payment_opts.blank? }
 
@@ -31,16 +31,20 @@ class Spot < ActiveRecord::Base
   end 
 
   def address
-  	return unless street && city && state && zip 
-  	"#{street}, #{city}, #{state} #{zip}"
+  	return unless street && city && state 
+  	[ street, city, state ].join(', ').titleize
   end
 
   def address_changed?
-  	street_changed? || city_changed? || state_changed? || zip_changed? 
+  	street_changed? || city_changed? || state_changed? #|| zip_changed? 
   end
 
   def normalize_friendly_id(string)
     super(string.gsub("'", ""))
+  end
+
+  def self.geolocate(position, radius)
+    where(id: self.near(position,radius, select: "#{table_name}.id").map(&:id))
   end
 
 private
@@ -57,11 +61,11 @@ private
     end 
   end
 
-  def neighborhood_exists?
-  	unless Neighborhood.exists?(neighborhood_id)
-  	  errors.add(:neighborhood, 'Invalid neighborhood selection')
-  	end
-  end
+  # def neighborhood_exists?
+  # 	unless Neighborhood.exists?(neighborhood_id)
+  # 	  errors.add(:neighborhood, 'Invalid neighborhood selection')
+  # 	end
+  # end
 
   def slug_candidates
   	[ :name, [ :name, :city ], [ :name, :street, :city ] ]
