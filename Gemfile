@@ -42,5 +42,7 @@ end
 
 #App server
 gem 'puma'
-
+#Auth
 gem 'devise'
+#Pretty Urls
+gem 'friendly_id'
