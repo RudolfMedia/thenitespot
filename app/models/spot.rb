@@ -1,4 +1,5 @@
 class Spot < ActiveRecord::Base
+  include Categorizable 
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
 
@@ -22,13 +23,17 @@ class Spot < ActiveRecord::Base
     validates :about, length: { maximum: 500 }
     validates :email, email: true
 
-	with_options url: true do 
-	  validates :website_url
-	  validates :reservation_url
-	  validates :facebook_url
-	  validates :twitter_url
-	end
+	  with_options url: true do 
+	    validates :website_url
+	    validates :reservation_url
+	    validates :facebook_url
+	    validates :twitter_url
+	  end
   end 
+  
+  validates_each :categorizations do |spot, attr, value|
+    spot.errors.add attr, "6 category max." unless spot.categorizations.size <= 6
+  end
 
   def address
   	return unless street && city && state 

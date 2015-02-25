@@ -6,7 +6,7 @@ class Profile < ActiveRecord::Base
   validates :current_state, length: { is: 2 }  
   validates :dob, length: { is: 10 }
   validates :gender, inclusion: { in: %w( male female ) }
-  validate :is_atleast_18, if: Proc.new { |p| p.dob.kind_of?(Date) }
+  validate  :is_atleast_18, if: ->(p){ p.dob.kind_of?(Date) }
 
   #has_one :avatar, ->{ where(is_primary: :true) }, as: :imagable, class_name: 'Photo', dependent: :destroy
   
