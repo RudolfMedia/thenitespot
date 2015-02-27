@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150225031804) do
+ActiveRecord::Schema.define(version: 20150227051442) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,12 @@ ActiveRecord::Schema.define(version: 20150225031804) do
   add_index "categorizations", ["categorizable_type"], name: "index_categorizations_on_categorizable_type", using: :btree
   add_index "categorizations", ["category_id"], name: "index_categorizations_on_category_id", using: :btree
 
+  create_table "features", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "neighborhoods", force: :cascade do |t|
     t.string   "label"
     t.string   "name"
@@ -63,6 +69,16 @@ ActiveRecord::Schema.define(version: 20150225031804) do
   end
 
   add_index "profiles", ["user_id"], name: "index_profiles_on_user_id", using: :btree
+
+  create_table "spot_features", force: :cascade do |t|
+    t.integer  "spot_id"
+    t.integer  "feature_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "spot_features", ["feature_id"], name: "index_spot_features_on_feature_id", using: :btree
+  add_index "spot_features", ["spot_id"], name: "index_spot_features_on_spot_id", using: :btree
 
   create_table "spots", force: :cascade do |t|
     t.string   "name",            default: "", null: false
@@ -121,5 +137,7 @@ ActiveRecord::Schema.define(version: 20150225031804) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   add_foreign_key "profiles", "users"
+  add_foreign_key "spot_features", "features"
+  add_foreign_key "spot_features", "spots"
   add_foreign_key "spots", "neighborhoods"
 end

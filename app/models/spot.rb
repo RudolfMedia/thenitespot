@@ -4,6 +4,9 @@ class Spot < ActiveRecord::Base
   friendly_id :slug_candidates, use: :slugged
 
   belongs_to :neighborhood
+  
+  has_many :spot_features, dependent: :destroy
+  has_many :features, through: :spot_features
 
   PRICE_RANGES 	  = { '$' => 'low pricing', '$$' => 'moderate pricing', '$$$' => 'high pricing', '$$$$' => 'fine dining' }
   PAYMENT_OPTIONS = ['cash', 'visa', 'mastercard', 'amex', 'discover']
