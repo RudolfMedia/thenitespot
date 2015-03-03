@@ -8,6 +8,8 @@ class Spot < ActiveRecord::Base
   has_many :spot_features, dependent: :destroy
   has_many :features, through: :spot_features
 
+  has_many :specials, dependent: :destroy 
+
   PRICE_RANGES 	  = { '$' => 'low pricing', '$$' => 'moderate pricing', '$$$' => 'high pricing', '$$$$' => 'fine dining' }
   PAYMENT_OPTIONS = ['cash', 'visa', 'mastercard', 'amex', 'discover']
   
@@ -18,8 +20,6 @@ class Spot < ActiveRecord::Base
   validates :name, length: { in: (3..30) }, exclusion: { in: %w( eat drink attend ) }
   validate :eat_drink_or_attend?
   validates_numericality_of :longitude, :latitude, message: 'Unable to locate given address' 
-  #validate :neighborhood_exists?, unless: ->(s){ s.neighborhood_id.blank? }
-  validate :valid_payment_options?, unless: ->(s){ s.payment_opts.blank? }
 
   with_options allow_blank: true do 
   	validates :price, inclusion: { in: PRICE_RANGES.keys }
@@ -33,6 +33,8 @@ class Spot < ActiveRecord::Base
 	    validates :twitter_url
 	  end
   end 
+
+  validate :valid_payment_options?, if: ->(s){ s.payment_opts.present? }
   
   validates_each :categorizations do |spot, attr, value|
     spot.errors.add attr, "6 category max." unless spot.categorizations.size <= 6
@@ -64,16 +66,10 @@ private
   end
 
   def valid_payment_options?
-    unless ( payment_opts - PAYMENT_OPTIONS ).empty?
+    if !payment_opts.is_a?(Array) || payment_opts.find{ |opts| !PAYMENT_OPTIONS.include? opts } 
       errors.add(:payment_opts, 'Invalid payment option selected')
-    end 
+    end
   end
-
-  # def neighborhood_exists?
-  # 	unless Neighborhood.exists?(neighborhood_id)
-  # 	  errors.add(:neighborhood, 'Invalid neighborhood selection')
-  # 	end
-  # end
 
   def slug_candidates
   	[ :name, [ :name, :city ], [ :name, :street, :city ] ]
