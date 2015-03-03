@@ -2,15 +2,15 @@ module Daily
   extend ActiveSupport::Concern
 
   included do
-    validates_presence_of :day 
+    validates_presence_of :days 
     validate :valid_days_of_week?
-    scope :current, ->{ where("#{table_name}.day @> ? ", "{#{DateTime.now.wday}}") }
+    scope :current, ->{ where("#{table_name}.days @> ? ", "{#{DateTime.now.stftime('%u')}}") }
   end
   
   def valid_days_of_week?
-  	if !day.is_a?(Array) || day.find{ |d| !('0'..'6').include? d }
-	  self.errors.add(:day, 'Invalid day selection')
+  	if !days.is_a?(Array) || days.find{ |d| !('1'..'7').include? d }
+	    self.errors.add(:days, 'Invalid day selection')
     end
   end
-
+  
 end

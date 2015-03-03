@@ -7,5 +7,4 @@ class Special < ActiveRecord::Base
   validates :description, length: { maximum: 250, too_long: "%{count} characters is the maximum allowed."}, allow_blank: true 
   validates_presence_of :start_time, :end_time, :spot_id 
 
-
 end

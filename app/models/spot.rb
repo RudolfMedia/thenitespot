@@ -8,6 +8,8 @@ class Spot < ActiveRecord::Base
   has_many :spot_features, dependent: :destroy
   has_many :features, through: :spot_features
 
+  has_many :hours, dependent: :destroy 
+
   has_many :specials, dependent: :destroy 
 
   PRICE_RANGES 	  = { '$' => 'low pricing', '$$' => 'moderate pricing', '$$$' => 'high pricing', '$$$$' => 'fine dining' }
