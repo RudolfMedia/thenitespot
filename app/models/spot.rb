@@ -10,7 +10,9 @@ class Spot < ActiveRecord::Base
 
   has_many :hours, dependent: :destroy 
 
-  has_many :specials, dependent: :destroy 
+  has_many :specials, dependent: :destroy
+
+  has_many :menus, dependent: :destroy  
 
   PRICE_RANGES 	  = { '$' => 'low pricing', '$$' => 'moderate pricing', '$$$' => 'high pricing', '$$$$' => 'fine dining' }
   PAYMENT_OPTIONS = ['cash', 'visa', 'mastercard', 'amex', 'discover']

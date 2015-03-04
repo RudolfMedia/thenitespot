@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150303061925) do
+ActiveRecord::Schema.define(version: 20150304062341) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,38 @@ ActiveRecord::Schema.define(version: 20150303061925) do
   end
 
   add_index "hours", ["spot_id"], name: "index_hours_on_spot_id", using: :btree
+
+  create_table "menu_items", force: :cascade do |t|
+    t.string   "name"
+    t.string   "description"
+    t.float    "price"
+    t.integer  "menu_section_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "menu_items", ["menu_section_id"], name: "index_menu_items_on_menu_section_id", using: :btree
+
+  create_table "menu_sections", force: :cascade do |t|
+    t.integer  "menu_id"
+    t.string   "name"
+    t.string   "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "menu_sections", ["menu_id"], name: "index_menu_sections_on_menu_id", using: :btree
+
+  create_table "menus", force: :cascade do |t|
+    t.string   "name"
+    t.string   "description"
+    t.integer  "sort"
+    t.integer  "spot_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "menus", ["spot_id"], name: "index_menus_on_spot_id", using: :btree
 
   create_table "neighborhoods", force: :cascade do |t|
     t.string   "label"
@@ -163,6 +195,9 @@ ActiveRecord::Schema.define(version: 20150303061925) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   add_foreign_key "hours", "spots"
+  add_foreign_key "menu_items", "menu_sections"
+  add_foreign_key "menu_sections", "menus"
+  add_foreign_key "menus", "spots"
   add_foreign_key "profiles", "users"
   add_foreign_key "specials", "spots"
   add_foreign_key "spot_features", "features"
