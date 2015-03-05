@@ -16,8 +16,8 @@ class User < ActiveRecord::Base
   # has_many :spots
   # has_many :events
 
-  has_many :favorites
-  has_many :favorite_spots, through: :favorites
+  has_many :favorites, dependent: :destroy
+  has_many :favorite_spots, through: :favorites, source: :spot 
 
   # has_many :checkins, dependent: :destroy
 

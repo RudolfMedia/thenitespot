@@ -5,7 +5,7 @@ class Spot < ActiveRecord::Base
 
   belongs_to :neighborhood
   
-  has_many :spot_features
+  has_many :spot_features, dependent: :destroy 
   has_many :features, through: :spot_features
 
   has_many :hours, dependent: :destroy 
@@ -14,7 +14,7 @@ class Spot < ActiveRecord::Base
 
   has_many :menus, dependent: :destroy  
 
-  has_many :favorites
+  has_many :favorites, dependent: :destroy 
   has_many :favorite_users, through: :favorites, source: :user 
 
   PRICE_RANGES 	  = { '$' => 'low pricing', '$$' => 'moderate pricing', '$$$' => 'high pricing', '$$$$' => 'fine dining' }
@@ -26,7 +26,7 @@ class Spot < ActiveRecord::Base
   validates_presence_of :name, :street, :city, :state #, :zip  needed?
   validates :name, length: { in: (3..30) }, exclusion: { in: %w( eat drink attend ) }
   validate :eat_drink_or_attend?
-  validates_numericality_of :longitude, :latitude, message: 'Unable to locate given address' 
+  #validates_numericality_of :longitude, :latitude, message: 'Unable to locate given address' 
 
   with_options allow_blank: true do 
   	validates :price, inclusion: { in: PRICE_RANGES.keys }
