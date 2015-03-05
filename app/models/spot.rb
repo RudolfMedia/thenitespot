@@ -5,7 +5,7 @@ class Spot < ActiveRecord::Base
 
   belongs_to :neighborhood
   
-  has_many :spot_features, dependent: :destroy
+  has_many :spot_features
   has_many :features, through: :spot_features
 
   has_many :hours, dependent: :destroy 
@@ -13,6 +13,9 @@ class Spot < ActiveRecord::Base
   has_many :specials, dependent: :destroy
 
   has_many :menus, dependent: :destroy  
+
+  has_many :favorites
+  has_many :favorite_users, through: :favorites, source: :user 
 
   PRICE_RANGES 	  = { '$' => 'low pricing', '$$' => 'moderate pricing', '$$$' => 'high pricing', '$$$$' => 'fine dining' }
   PAYMENT_OPTIONS = ['cash', 'visa', 'mastercard', 'amex', 'discover']

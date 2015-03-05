@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150304062341) do
+ActiveRecord::Schema.define(version: 20150305014157) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,16 @@ ActiveRecord::Schema.define(version: 20150304062341) do
   add_index "categorizations", ["categorizable_id"], name: "index_categorizations_on_categorizable_id", using: :btree
   add_index "categorizations", ["categorizable_type"], name: "index_categorizations_on_categorizable_type", using: :btree
   add_index "categorizations", ["category_id"], name: "index_categorizations_on_category_id", using: :btree
+
+  create_table "favorites", force: :cascade do |t|
+    t.integer  "spot_id"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "favorites", ["spot_id"], name: "index_favorites_on_spot_id", using: :btree
+  add_index "favorites", ["user_id"], name: "index_favorites_on_user_id", using: :btree
 
   create_table "features", force: :cascade do |t|
     t.string   "name"
@@ -194,6 +204,8 @@ ActiveRecord::Schema.define(version: 20150304062341) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
+  add_foreign_key "favorites", "spots"
+  add_foreign_key "favorites", "users"
   add_foreign_key "hours", "spots"
   add_foreign_key "menu_items", "menu_sections"
   add_foreign_key "menu_sections", "menus"

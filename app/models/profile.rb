@@ -6,7 +6,7 @@ class Profile < ActiveRecord::Base
   validates :current_state, length: { is: 2 }  
   validates :dob, length: { is: 10 }
   validates :gender, inclusion: { in: %w( male female ) }
-  validate  :is_atleast_18, if: ->(p){ p.dob.kind_of?(Date) }
+  validate  :is_atleast_18
 
   #has_one :avatar, ->{ where(is_primary: :true) }, as: :imagable, class_name: 'Photo', dependent: :destroy
   
@@ -26,7 +26,7 @@ class Profile < ActiveRecord::Base
 private 
 
   def is_atleast_18
-    unless dob.to_date < 18.years.ago.to_date  
+    unless !dob.is_a?(Date) || dob.to_date < 18.years.ago.to_date  
       errors.add(:dob, 'Must be 18 years of age to sign up.')
     end
   end
