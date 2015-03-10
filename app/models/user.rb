@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
          #omniauthable,:omnitauth_proivder => [:facebook]
   
-  has_one :profile, dependent: :destroy 
+  has_one :profile, dependent: :destroy, inverse_of: :user 
   accepts_nested_attributes_for :profile
   #delegate :full_name, :current_location, :gender, :age, to: :profile 
 
