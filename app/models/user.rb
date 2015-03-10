@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
   has_many :favorites, dependent: :destroy
   has_many :favorite_spots, through: :favorites, source: :spot 
 
-  # has_many :checkins, dependent: :destroy
+  has_many :checkins, dependent: :destroy
 
   #omniauth 
 
