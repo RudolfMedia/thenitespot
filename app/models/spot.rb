@@ -26,7 +26,7 @@ class Spot < ActiveRecord::Base
   before_validation :geocode, if: ->(s){ s.address.present? && s.address_changed? }
 
   validates_presence_of :name, :street, :city, :state #, :zip  needed?
-  validates :name, length: { in: (3..30) }, exclusion: { in: %w( eat drink attend ) }
+  validates :name, length: { in: (3..30) }, unreserved_name: true 
   validate :eat_drink_or_attend?
   validates_numericality_of :longitude, :latitude, message: 'Unable to locate given address' 
 
@@ -52,6 +52,10 @@ class Spot < ActiveRecord::Base
   def address
   	return unless street && city && state 
   	[ street, city, state ].join(', ').titleize
+  end
+
+  def price_range
+    Spot::PRICE_RANGES[price] if price 
   end
 
   def address_changed?
