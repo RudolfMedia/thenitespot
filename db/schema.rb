@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150311001517) do
+ActiveRecord::Schema.define(version: 20150311043428) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,29 @@ ActiveRecord::Schema.define(version: 20150311001517) do
 
   add_index "checkins", ["spot_id"], name: "index_checkins_on_spot_id", using: :btree
   add_index "checkins", ["user_id"], name: "index_checkins_on_user_id", using: :btree
+
+  create_table "events", force: :cascade do |t|
+    t.string   "name",            default: "", null: false
+    t.string   "slug"
+    t.text     "about"
+    t.string   "age"
+    t.string   "entry"
+    t.string   "entry_fee"
+    t.integer  "spot_id"
+    t.string   "phone"
+    t.string   "email"
+    t.string   "ticket_url"
+    t.string   "website_url"
+    t.string   "facebook_url"
+    t.string   "twitter_url"
+    t.date     "expiration_date"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "events", ["expiration_date"], name: "index_events_on_expiration_date", using: :btree
+  add_index "events", ["slug"], name: "index_events_on_slug", using: :btree
+  add_index "events", ["spot_id"], name: "index_events_on_spot_id", using: :btree
 
   create_table "favorites", force: :cascade do |t|
     t.integer  "spot_id"
@@ -120,6 +143,19 @@ ActiveRecord::Schema.define(version: 20150311001517) do
   end
 
   add_index "neighborhoods", ["latitude", "longitude"], name: "index_neighborhoods_on_latitude_and_longitude", using: :btree
+
+  create_table "occurrences", force: :cascade do |t|
+    t.integer  "event_id"
+    t.date     "start_date",      null: false
+    t.time     "start_time"
+    t.date     "end_date"
+    t.time     "end_time"
+    t.date     "expiration_date", null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "occurrences", ["event_id"], name: "index_occurrences_on_event_id", using: :btree
 
   create_table "profiles", force: :cascade do |t|
     t.integer  "user_id"
@@ -217,12 +253,14 @@ ActiveRecord::Schema.define(version: 20150311001517) do
 
   add_foreign_key "checkins", "spots"
   add_foreign_key "checkins", "users"
+  add_foreign_key "events", "spots"
   add_foreign_key "favorites", "spots"
   add_foreign_key "favorites", "users"
   add_foreign_key "hours", "spots"
   add_foreign_key "menu_items", "menu_sections"
   add_foreign_key "menu_sections", "menus"
   add_foreign_key "menus", "spots"
+  add_foreign_key "occurrences", "events"
   add_foreign_key "profiles", "users"
   add_foreign_key "specials", "spots"
   add_foreign_key "spot_features", "features"

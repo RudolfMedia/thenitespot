@@ -5,6 +5,8 @@ class Spot < ActiveRecord::Base
 
   belongs_to :neighborhood, counter_cache: true 
   
+  has_many :events, dependent: :destroy 
+  
   has_many :spot_features, dependent: :destroy 
   has_many :features, through: :spot_features
 
