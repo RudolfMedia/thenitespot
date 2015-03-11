@@ -3,7 +3,7 @@ class Spot < ActiveRecord::Base
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
 
-  belongs_to :neighborhood
+  belongs_to :neighborhood, counter_cache: true 
   
   has_many :spot_features, dependent: :destroy 
   has_many :features, through: :spot_features

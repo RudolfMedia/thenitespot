@@ -1,8 +1,8 @@
 class Neighborhood < ActiveRecord::Base
 	has_many :spots
-
+    
 	geocoded_by :address
-	before_validation :gecode, if: ->(n){ n.address.present && address_changed? }
+	before_validation :geocode, if: ->(n){ n.address.present? && address_changed? }
 
 	validates :state, presence: true, length: { is: 2 }
 	validates :name, presence: true, length: { in: 2..50 }
