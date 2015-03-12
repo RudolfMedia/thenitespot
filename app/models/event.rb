@@ -4,8 +4,14 @@ class Event < ActiveRecord::Base
   friendly_id :name, use: :slugged #*
   belongs_to :spot
 
-  has_many :occurrences, dependent: :destroy
+  has_many :occurrences, dependent: :delete_all
   accepts_nested_attributes_for :occurrences, reject_if: :all_blank, allow_destroy: true
+
+  validates_each :occurrences do |event, attr, value|
+    if event.occurrences.size >= 6
+      event.errors.add attr, "An even may have up to 5 seperate occurrences."
+    end 
+  end
 
   validates_presence_of :name, :spot_id, :age, :entry, :occurrences
   validates :name, length: { in:  (3..45) }, unreserved_name: true 
@@ -29,6 +35,7 @@ class Event < ActiveRecord::Base
      validates :twitter_url 
     end
   end
+
 
   validates_each :categorizations do |event, attr, value|
     event.errors.add attr, '6 category max.' unless event.categorizations.size <= 6
