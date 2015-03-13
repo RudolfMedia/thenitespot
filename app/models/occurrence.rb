@@ -3,11 +3,9 @@ class Occurrence < ActiveRecord::Base
   before_save :set_expiration_date 
 
   validates :start_date, presence: true 
-  validate :dates_are_not_in_the_past, unless: ->(o){ o.start_date.blank? }
-  validate :dates_are_within_one_year, unless: ->(o){ o.start_date.blank? }
+  validate :dates_are_not_in_the_past, :dates_are_within_one_year,  unless: ->(o){ o.start_date.blank? }
 
-  after_save :update_event_expiration_date, if: :is_final_occurrence?
-  after_destroy :refresh_event_expiration_date
+  after_destroy :destroy_event, if: :was_final_occurrence?
 
   scope :upcoming, ->{ where("expiration_date >= ?", DateTime.now.beginning_of_day).order(:start_date) }
 
@@ -29,20 +27,12 @@ private
    end
   end
 
-  def is_final_occurrence?
-    Occurrence.where(event_id: event_id).order(expiration_date: :desc).first == self 
-  end 
-
-  def update_event_expiration_date
-    event.update_attribute(:expiration_date, expiration_date)
+  def was_final_occurrence?
+   event.occurrences.count.zero?
   end
 
-  def refresh_event_expiration_date
-    self.class.resave_final_occurrence_of_event event_id 
-  end
-
-  def self.resave_final_occurrence_of_event(event_id)
-    Occurrence.where(event_id: event_id).order(expiration_date: :desc).first.save 
+  def destroy_event
+   event.destroy 
   end
 
 end

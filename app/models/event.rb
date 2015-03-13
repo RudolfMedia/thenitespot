@@ -36,13 +36,12 @@ class Event < ActiveRecord::Base
     end
   end
 
-
   validates_each :categorizations do |event, attr, value|
     event.errors.add attr, '6 category max.' unless event.categorizations.size <= 6
   end
+ 
+  scope :upcoming, ->{ joins(:occurrences).merge(Occurrence.upcoming) }
 
-  #default_scope ->{ where("expiration_date >= ?", DateTime.now.beginning_of_day) }
-  
   def normalize_friendly_id(string)
     super(string.gsub("'", ""))
   end

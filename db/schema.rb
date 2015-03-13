@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150311043428) do
+ActiveRecord::Schema.define(version: 20150313055148) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,7 +49,7 @@ ActiveRecord::Schema.define(version: 20150311043428) do
   add_index "checkins", ["user_id"], name: "index_checkins_on_user_id", using: :btree
 
   create_table "events", force: :cascade do |t|
-    t.string   "name",            default: "", null: false
+    t.string   "name",         default: "", null: false
     t.string   "slug"
     t.text     "about"
     t.string   "age"
@@ -62,12 +62,10 @@ ActiveRecord::Schema.define(version: 20150311043428) do
     t.string   "website_url"
     t.string   "facebook_url"
     t.string   "twitter_url"
-    t.date     "expiration_date"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
-  add_index "events", ["expiration_date"], name: "index_events_on_expiration_date", using: :btree
   add_index "events", ["slug"], name: "index_events_on_slug", using: :btree
   add_index "events", ["spot_id"], name: "index_events_on_spot_id", using: :btree
 
@@ -156,6 +154,7 @@ ActiveRecord::Schema.define(version: 20150311043428) do
   end
 
   add_index "occurrences", ["event_id"], name: "index_occurrences_on_event_id", using: :btree
+  add_index "occurrences", ["expiration_date"], name: "index_occurrences_on_expiration_date", using: :btree
 
   create_table "profiles", force: :cascade do |t|
     t.integer  "user_id"
