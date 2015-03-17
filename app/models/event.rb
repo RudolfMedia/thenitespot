@@ -9,7 +9,7 @@ class Event < ActiveRecord::Base
 
   validates_each :occurrences do |event, attr, value|
     if event.occurrences.size >= 6
-      event.errors.add attr, "An even may have up to 5 seperate occurrences."
+      event.errors.add attr, "An event may have up to 5 seperate occurrences."
     end 
   end
 

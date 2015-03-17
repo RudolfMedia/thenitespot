@@ -5,7 +5,7 @@ class Occurrence < ActiveRecord::Base
   validates :start_date, presence: true 
   validate :dates_are_not_in_the_past, :dates_are_within_one_year,  unless: ->(o){ o.start_date.blank? }
 
-  after_destroy :destroy_event, if: :was_final_occurrence?
+  after_destroy :destroy_event, if: :event_is_orphan?
 
   scope :upcoming, ->{ where("expiration_date >= ?", DateTime.now.beginning_of_day).order(:start_date) }
 
@@ -27,7 +27,7 @@ private
    end
   end
 
-  def was_final_occurrence?
+  def event_is_orphan?
    event.occurrences.count.zero?
   end
 
