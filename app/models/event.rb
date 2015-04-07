@@ -7,6 +7,8 @@ class Event < ActiveRecord::Base
   has_many :occurrences, dependent: :delete_all
   accepts_nested_attributes_for :occurrences, reject_if: :all_blank, allow_destroy: true
 
+  has_many :reports, as: :reportable, dependent: :destroy 
+
   validates_each :occurrences do |event, attr, value|
     if event.occurrences.size >= 6
       event.errors.add attr, "An event may have up to 5 seperate occurrences."

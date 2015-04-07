@@ -19,7 +19,13 @@ class Spot < ActiveRecord::Base
   has_many :favorites, dependent: :destroy 
   has_many :favorite_users, through: :favorites, source: :user 
 
-  has_many :checkins, dependent: :destroy 
+  has_many :checkins, dependent: :destroy
+
+  has_many :images, as: :imageable, dependent: :destroy 
+  has_one  :primary_image, ->{ where(is_primary: true) }, as: :imageable, class_name: 'Image'
+  #has_one :background_image, ->{ where(is_bg: true)}, as: :imageable, class_name: 'Photo'
+
+  has_many :reports, as: :reportable, dependent: :destroy 
 
   PRICE_RANGES 	  = { '$' => 'low pricing', '$$' => 'moderate pricing', '$$$' => 'high pricing', '$$$$' => 'fine dining' }
   PAYMENT_OPTIONS = ['cash', 'visa', 'mastercard', 'amex', 'discover']
