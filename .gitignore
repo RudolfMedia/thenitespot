@@ -13,3 +13,5 @@
 /tmp
 scratch_notes.rb
 .DS_Store
+/public/images
+/public/uploads

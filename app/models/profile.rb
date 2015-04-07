@@ -1,5 +1,8 @@
 class Profile < ActiveRecord::Base
   belongs_to :user
+  
+  # has_many :images, as: :imageable, dependent: :destroy
+  has_one :avatar, as: :imageable, class_name: 'Image', dependent: :destroy 
 
   validates_presence_of :first_name, :last_name, :dob, :gender, :current_city, :current_state
   validates :first_name, :last_name, :current_city, length: { in: 2..25 }
@@ -16,6 +19,10 @@ class Profile < ActiveRecord::Base
 
   def current_location
   	[ current_city, current_state ].join(', ').titleize 
+  end
+
+  def current_location=(value)
+    self.current_city, self.current_state = value.split(',').map(&:strip)
   end
 
   def age

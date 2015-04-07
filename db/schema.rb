@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150318011900) do
+ActiveRecord::Schema.define(version: 20150407025947) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -98,6 +98,18 @@ ActiveRecord::Schema.define(version: 20150318011900) do
 
   add_index "hours", ["spot_id"], name: "index_hours_on_spot_id", using: :btree
 
+  create_table "images", force: :cascade do |t|
+    t.integer  "imageable_id"
+    t.string   "imageable_type"
+    t.string   "file"
+    t.boolean  "is_primary"
+    t.boolean  "is_bg"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "images", ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id", using: :btree
+
   create_table "menu_items", force: :cascade do |t|
     t.string   "name"
     t.string   "description"
@@ -170,6 +182,18 @@ ActiveRecord::Schema.define(version: 20150318011900) do
   end
 
   add_index "profiles", ["user_id"], name: "index_profiles_on_user_id", using: :btree
+
+  create_table "reports", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "reportable_id"
+    t.string   "reportable_type"
+    t.integer  "issue"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "reports", ["reportable_type", "reportable_id"], name: "index_reports_on_reportable_type_and_reportable_id", using: :btree
+  add_index "reports", ["user_id"], name: "index_reports_on_user_id", using: :btree
 
   create_table "specials", force: :cascade do |t|
     t.integer  "spot_id"
@@ -262,6 +286,7 @@ ActiveRecord::Schema.define(version: 20150318011900) do
   add_foreign_key "menus", "spots"
   add_foreign_key "occurrences", "events"
   add_foreign_key "profiles", "users"
+  add_foreign_key "reports", "users"
   add_foreign_key "specials", "spots"
   add_foreign_key "spot_features", "features"
   add_foreign_key "spot_features", "spots"

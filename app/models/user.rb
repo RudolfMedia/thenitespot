@@ -6,7 +6,14 @@ class User < ActiveRecord::Base
   
   has_one :profile, dependent: :destroy, inverse_of: :user 
   accepts_nested_attributes_for :profile
-  #delegate :full_name, :current_location, :gender, :age, to: :profile 
+
+  delegate :first_name, 
+           :last_name, 
+           :full_name, 
+           :current_location, 
+           :gender, 
+           :age, 
+           :avatar, to: :profile 
 
   validates_uniqueness_of :auth_token 
   validates_presence_of :profile 
@@ -24,6 +31,8 @@ class User < ActiveRecord::Base
   has_many :reports, dependent: :destroy 
 
   #omniauth 
+
+  default_scope ->{ includes(:profile) }
 
 
 private

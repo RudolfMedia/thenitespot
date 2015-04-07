@@ -48,3 +48,7 @@ gem 'devise'
 gem 'friendly_id'
 #Geocoding
 gem 'geocoder'
+#File handler
+gem 'carrierwave'
+#
+gem 'mini_magick'
