@@ -13,7 +13,10 @@ class User < ActiveRecord::Base
            :current_location, 
            :gender, 
            :age, 
-           :avatar, to: :profile 
+           :avatar, to: :profile
+
+  has_many :user_roles, dependent: :restrict_with_error
+  has_many :spots, through: :user_roles, source: :resource, source_type: 'Spot' 
 
   validates_uniqueness_of :auth_token 
   validates_presence_of :profile 
@@ -34,7 +37,14 @@ class User < ActiveRecord::Base
 
   default_scope ->{ includes(:profile) }
 
+  def is_admin_of?(resource)
+    user_roles.admins.exists? resource: resource 
+  end 
 
+  def can_update?(resource)
+    user_roles.exists? resource: resource 
+  end
+  
 private
   
   def set_auth_token

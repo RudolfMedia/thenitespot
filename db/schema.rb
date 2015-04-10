@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150407025947) do
+ActiveRecord::Schema.define(version: 20150410050730) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -255,6 +255,19 @@ ActiveRecord::Schema.define(version: 20150407025947) do
   add_index "spots", ["price"], name: "index_spots_on_price", using: :btree
   add_index "spots", ["slug"], name: "index_spots_on_slug", unique: true, using: :btree
 
+  create_table "user_roles", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "resource_id"
+    t.string   "resource_type"
+    t.integer  "role"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "user_roles", ["resource_type", "resource_id"], name: "index_user_roles_on_resource_type_and_resource_id", using: :btree
+  add_index "user_roles", ["role"], name: "index_user_roles_on_role", using: :btree
+  add_index "user_roles", ["user_id"], name: "index_user_roles_on_user_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -291,4 +304,5 @@ ActiveRecord::Schema.define(version: 20150407025947) do
   add_foreign_key "spot_features", "features"
   add_foreign_key "spot_features", "spots"
   add_foreign_key "spots", "neighborhoods"
+  add_foreign_key "user_roles", "users"
 end

@@ -1,5 +1,6 @@
 class Spot < ActiveRecord::Base
   include Categorizable 
+  include UserRoleable
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
 
@@ -28,7 +29,7 @@ class Spot < ActiveRecord::Base
   has_many :reports, as: :reportable, dependent: :destroy 
 
   PRICE_RANGES 	  = { '$' => 'low pricing', '$$' => 'moderate pricing', '$$$' => 'high pricing', '$$$$' => 'fine dining' }
-  PAYMENT_OPTIONS = ['cash', 'visa', 'mastercard', 'amex', 'discover']
+  PAYMENT_OPTIONS = ['visa', 'mastercard', 'amex', 'discover']
   
   geocoded_by :address 
   before_validation :geocode, if: ->(s){ s.address.present? && s.address_changed? }
