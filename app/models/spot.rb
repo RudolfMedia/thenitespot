@@ -1,6 +1,7 @@
 class Spot < ActiveRecord::Base
   include Categorizable 
   include UserRoleable
+  include Imageable
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
 
@@ -21,10 +22,6 @@ class Spot < ActiveRecord::Base
   has_many :favorite_users, through: :favorites, source: :user 
 
   has_many :checkins, dependent: :destroy
-
-  has_many :images, as: :imageable, dependent: :destroy 
-  #has_one  :primary_image, ->{ find_by(is_primary: true) }, as: :imageable, class_name: 'Image'
-  #has_one :background_image, ->{ where(is_bg: true)}, as: :imageable, class_name: 'Photo'
 
   has_many :reports, as: :reportable, dependent: :destroy 
 

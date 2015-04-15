@@ -5,8 +5,11 @@ class Image < ActiveRecord::Base
 
   validates_presence_of :imageable_id, :imageable_type, :file 
 
-  before_save :update_imageable_primary, if: ->(img){ img.is_primary? && img.is_primary_changed? }
+  before_save :update_imageable_primary,     if: ->(img){ img.is_primary? && img.is_primary_changed? }
   before_save :update_collection_background, if: ->(img){ img.is_bg? && img.is_bg_changed? }
+
+  scope :primary,    ->{ where is_primary: true }
+  scope :background, ->{ where is_bg: true}
 
 private 
 

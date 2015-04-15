@@ -1,6 +1,7 @@
 class Event < ActiveRecord::Base
   include Categorizable
   extend FriendlyId
+  include Imageable
   friendly_id :name, use: :slugged #*
   belongs_to :spot
 
