@@ -17,14 +17,12 @@ class User < ActiveRecord::Base
 
   has_many :user_roles, dependent: :restrict_with_error
   has_many :spots, through: :user_roles, source: :resource, source_type: 'Spot' 
+  has_many :events, through: :spots 
 
   validates_uniqueness_of :auth_token 
   validates_presence_of :profile 
 
   before_create :set_auth_token, unless: ->(u){ u.auth_token.present? } #before_validation to sign up with facebook?
-
-  # has_many :spots
-  # has_many :events
 
   has_many :favorites, dependent: :destroy
   has_many :favorite_spots, through: :favorites, source: :spot 

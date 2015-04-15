@@ -1,9 +1,9 @@
 class Profile < ActiveRecord::Base
   belongs_to :user
-  
+  mount_uploader :avatar, AvatarUploader
   # has_many :images, as: :imageable, dependent: :destroy
-  has_one :avatar, as: :imageable, class_name: 'Image', dependent: :destroy 
-
+  # has_one :avatar, as: :imageable, class_name: 'Image', dependent: :destroy 
+  
   validates_presence_of :first_name, :last_name, :dob, :gender, :current_city, :current_state
   validates :first_name, :last_name, :current_city, length: { in: 2..25 }
   validates :current_state, length: { is: 2 }  
