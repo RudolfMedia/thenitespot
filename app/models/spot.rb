@@ -3,10 +3,11 @@ class Spot < ActiveRecord::Base
   include UserRoleable
   include Imageable
   extend FriendlyId
+
   friendly_id :slug_candidates, use: :slugged
 
   belongs_to :neighborhood, counter_cache: true 
-  
+ 
   has_many :events, dependent: :destroy 
   
   has_many :spot_features, dependent: :destroy 
